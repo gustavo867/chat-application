@@ -4,7 +4,7 @@ import Toast from 'react-native-toast-message';
 import firebase from '@react-native-firebase/app';
 
 import { ThemeProvider } from 'styled-components';
-import { StatusBar } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -16,10 +16,11 @@ import firebaseConfig from './config/firebaseConfig';
 import Loading from 'components/Loading';
 
 const App: React.FC = () => {
-  if (firebase.apps.length >= 0) {
+  if (firebase.apps.length > 0) {
     firebase.initializeApp(firebaseConfig);
   }
 
+  LogBox.ignoreLogs(['Possible Unhandled Promise Rejection']);
   if (store.getState().auth.loading) {
     return (
       <ThemeProvider theme={light}>
