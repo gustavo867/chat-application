@@ -7,7 +7,7 @@ const light = {
 
     background: '#FFFFFF',
     userChat: '#1C55F3',
-    otherChat: '#F5FBFE',
+    otherChat: '#D0D3E3',
     red: '#FF3653',
     grey: '#9F9F9F',
     username: '#3C3E3F',
