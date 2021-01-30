@@ -1,7 +1,14 @@
 import { call, put } from 'redux-saga/effects';
 import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
-import { authRegisterFailure, authRegisterSuccess } from './actions';
+import firebase from '@react-native-firebase/app';
+import {
+  authLogoutSuccess,
+  authRegisterFailure,
+  authRegisterSuccess,
+  authSignInFailure,
+  authSignInSuccess,
+} from './actions';
 
 type Payload = {
   payload: {
@@ -10,6 +17,59 @@ type Payload = {
     password: string;
   };
 };
+
+type SignInPayload = {
+  payload: {
+    email: string;
+    password: string;
+  };
+};
+
+export function* authSignIn({ payload }: SignInPayload) {
+  try {
+    const userAuth = auth();
+
+    const userCredentials = yield call(
+      [userAuth, userAuth.signInWithEmailAndPassword],
+      payload.email,
+      payload.password,
+    );
+
+    Toast.show({
+      text1: 'Signed with success',
+      text2: 'Redirecting',
+      type: 'success',
+    });
+
+    yield put(authSignInSuccess(userCredentials));
+  } catch (e) {
+    Toast.show({
+      text1: 'Error while signing user',
+      type: 'error',
+    });
+    yield put(authSignInFailure());
+  }
+}
+
+export function* logOut() {
+  try {
+    const userAuth = auth();
+    const res = yield call([userAuth, userAuth.signOut]);
+
+    Toast.show({
+      text1: 'Signed out success',
+      text2: 'Redirecting',
+      type: 'success',
+    });
+
+    yield put(authLogoutSuccess());
+  } catch (e) {
+    Toast.show({
+      text1: 'Error while logOut user',
+      type: 'error',
+    });
+  }
+}
 
 export async function* authRegisterUserName(
   email: string,

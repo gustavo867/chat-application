@@ -27,6 +27,7 @@ const reducer: Reducer = (state = INITIAL_STATE, action) => {
           hasError: false,
         },
         user: action.payload,
+        isAuthenticated: true,
       };
     case AuthTypes.AUTH_REGISTER_FAILURE:
       return {
@@ -35,6 +36,39 @@ const reducer: Reducer = (state = INITIAL_STATE, action) => {
         error: {
           msg: 'Error while registering user',
           hasError: true,
+        },
+      };
+    case AuthTypes.AUTH_SIGNIN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        user: null,
+      };
+    case AuthTypes.AUTH_SIGNIN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: action.payload,
+        isAuthenticated: true,
+      };
+    case AuthTypes.AUTH_SIGNIN_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: {
+          msg: 'Error while signing user',
+          hasError: true,
+        },
+      };
+    case AuthTypes.AUTH_LOGOUT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: null,
+        isAuthenticated: false,
+        error: {
+          msg: '',
+          hasError: false,
         },
       };
     default:

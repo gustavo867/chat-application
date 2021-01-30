@@ -1,4 +1,3 @@
-import { act } from 'react-test-renderer';
 import { action } from 'typesafe-actions';
 import { AuthTypes, AuthUserType } from './types';
 
@@ -20,3 +19,7 @@ export const authSignInRequest = (email: string, password: string) =>
 export const authSignInSuccess = (data: AuthUserType) =>
   action(AuthTypes.AUTH_SIGNIN_SUCCESS, data);
 export const authSignInFailure = () => action(AuthTypes.AUTH_SIGNIN_FAILURE);
+
+export const authLogoutRequest = () => action(AuthTypes.AUTH_LOGOUT_REQUEST);
+
+export const authLogoutSuccess = () => action(AuthTypes.AUTH_LOGOUT_SUCCESS);

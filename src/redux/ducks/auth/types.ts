@@ -7,6 +7,8 @@ export enum AuthTypes {
   'AUTH_SIGNIN_REQUEST' = '@auth/signin_request',
   'AUTH_SIGNIN_SUCCESS' = '@auth/signin_success',
   'AUTH_SIGNIN_FAILURE' = '@auth/signin_failure',
+  'AUTH_LOGOUT_REQUEST' = '@auth/auth_logout_request',
+  'AUTH_LOGOUT_SUCCESS' = '@auth/auth_logout_success',
 }
 
 export type AuthUserType = FirebaseAuthTypes.UserCredential;
