@@ -35,6 +35,8 @@ const Input: React.FC<InputProps> = ({ type, ...rest }) => {
     <S.Container active={active}>
       <S.Icon source={source()} />
       <S.Input
+        autoCapitalize="none"
+        autoCorrect={false}
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
         onSubmitEditing={() => setActive(false)}

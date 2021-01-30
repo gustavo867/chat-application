@@ -22,10 +22,10 @@ export const Container = styled.TouchableOpacity.attrs({
 
 export const Text = styled.Text<Props>`
   font-size: ${moderateScale(16)}px;
-  font-weight: bold;
   color: ${(props) =>
     props.active
       ? props.theme.colors.background
       : props.theme.colors.inputPlaceholder};
   margin-horizontal: 10px;
+  font-family: 'Poppins-Bold';
 `;

@@ -37,9 +37,9 @@ export const Icon = styled.Image`
 export const Input = styled.TextInput<InputProps>`
   color: ${(props) => props.theme.colors.inputColor};
   font-size: ${moderateScale(16)}px;
-  font-weight: bold;
   letter-spacing: 0.4px;
   padding-left: ${moderateScale(10)}px;
   flex: 1;
   max-width: ${width * 0.6}px;
+  font-family: 'Poppins-Bold';
 `;
