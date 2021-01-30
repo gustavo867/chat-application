@@ -55,7 +55,7 @@ export const Separator = styled.View`
 `;
 
 export const LargeMargin = styled.View`
-  height: ${moderateScale(100)}px;
+  height: ${moderateScale(150)}px;
 `;
 
 export const KeyBoardView = styled.KeyboardAvoidingView``;
