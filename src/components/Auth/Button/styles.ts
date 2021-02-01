@@ -15,7 +15,7 @@ export const Container = styled.TouchableOpacity.attrs({
   justify-content: center;
   flex-direction: row;
   background-color: ${(props) =>
-    props.active ? props.theme.colors.primary : '#FFF'};
+    props.active ? props.theme.colors.primary : props.theme.colors.background};
   elevation: 10;
   margin-top: ${moderateScale(20)}px;
 `;

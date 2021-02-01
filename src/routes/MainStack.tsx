@@ -25,8 +25,8 @@ const MainStack: React.FC = () => {
   const dispatch = useDispatch();
 
   const onPressLogOut = useCallback(() => {
-    dispatch(authLogoutRequest())
-  },[])
+    dispatch(authLogoutRequest());
+  }, []);
   return (
     <Main.Navigator
       screenOptions={{
@@ -34,7 +34,7 @@ const MainStack: React.FC = () => {
           backgroundColor: colors.primary,
           height: moderateScale(100),
         },
-        headerTintColor: '#ffffff',
+        headerTintColor: colors.primary,
         headerTitleAlign: 'center',
         headerTitleStyle: {
           fontSize: moderateScale(22),

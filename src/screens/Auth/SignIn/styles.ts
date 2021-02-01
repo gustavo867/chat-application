@@ -23,7 +23,7 @@ export const Circle = styled.TouchableOpacity`
   height: ${moderateScale(44)}px;
   width: ${moderateScale(44)}px;
   border-radius: ${moderateScale(22)}px;
-  background-color: rgba(18, 18, 29, 0.05);
+  background-color: ${(props) => props.theme.colors.blackOpacity};
   margin-bottom: ${moderateScale(30)}px;
   align-items: center;
   justify-content: center;
@@ -49,7 +49,7 @@ export const Separator = styled.View`
   width: ${width * 0.8}px;
   align-self: center;
   height: 1px;
-  background-color: #12121d;
+  background-color: ${(props) => props.theme.colors.inputColor};
   opacity: 0.3;
   margin-top: ${moderateScale(20)}px;
 `;

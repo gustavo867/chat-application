@@ -12,7 +12,7 @@ type Props = {
 };
 
 type InputProps = {
-  type: 'email' | 'password' | 'user';
+  type: 'email' | 'password' | 'user' | 'username';
 };
 
 export const Container = styled.View<Props>`

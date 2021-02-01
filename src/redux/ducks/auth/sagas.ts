@@ -1,7 +1,8 @@
 import { call, put } from 'redux-saga/effects';
 import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
-import firebase from '@react-native-firebase/app';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import {
   authLogoutSuccess,
   authRegisterFailure,
@@ -9,12 +10,14 @@ import {
   authSignInFailure,
   authSignInSuccess,
 } from './actions';
+import { getPhoto } from 'src/utils/getPhoto';
 
 type Payload = {
   payload: {
     email: string;
     username: string;
     password: string;
+    imageUri: string;
   };
 };
 
@@ -75,6 +78,7 @@ export async function* authRegisterUserName(
   email: string,
   username: string,
   password: string,
+  imageUri: string,
 ) {
   try {
     const user = await auth().signInWithEmailAndPassword(email, password);
@@ -83,7 +87,28 @@ export async function* authRegisterUserName(
       displayName: username,
     });
 
-    yield put(authRegisterSuccess(user));
+    const db = firestore().collection('info').doc(user.user.uid);
+
+    if (imageUri) {
+      try {
+        const filename = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+        const uploadUri = imageUri.replace('file://', '');
+
+        const reference = storage().ref(filename);
+        const task = await reference.putFile(uploadUri);
+
+        task.task.then((res) => {
+          console.log(res);
+        });
+      } catch (e) {
+        Toast.show({
+          text1: 'Error while updaloading photo',
+          type: 'error',
+        });
+      }
+    }
+
+    // yield put(authRegisterSuccess(user));
   } catch (e) {
     Toast.show({
       text1: 'Error while signing user',
@@ -107,8 +132,13 @@ export function* authRegisterLoad({ payload }: Payload) {
       type: 'success',
     });
 
-    authRegisterUserName(payload.email, payload.username, payload.password);
-    yield put(authRegisterSuccess(userCredentials));
+    authRegisterUserName(
+      payload.email,
+      payload.username,
+      payload.password,
+      payload.imageUri,
+    );
+    // yield put(authRegisterSuccess(userCredentials));
   } catch (e) {
     Toast.show({
       text1: 'Error while registering user',

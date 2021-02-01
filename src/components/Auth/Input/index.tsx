@@ -10,7 +10,7 @@ import password from 'assets/password.png';
 import user from 'assets/user.png';
 
 interface InputProps extends TextInputProps {
-  type: 'email' | 'password' | 'user';
+  type: 'email' | 'password' | 'user' | 'username';
 }
 
 const Input: React.FC<InputProps> = ({ type, ...rest }) => {
@@ -25,6 +25,8 @@ const Input: React.FC<InputProps> = ({ type, ...rest }) => {
       case 'password':
         return password;
       case 'user':
+        return user;
+      case 'username':
         return user;
       default:
         return user;
@@ -44,7 +46,13 @@ const Input: React.FC<InputProps> = ({ type, ...rest }) => {
         type={type}
         placeholderTextColor={inputPlaceholder}
         placeholder={
-          type === 'email' ? 'Email' : type === 'password' ? 'Password' : 'Name'
+          type === 'email'
+            ? 'Email'
+            : type === 'username'
+            ? 'Username'
+            : type === 'password'
+            ? 'Password'
+            : 'Name'
         }
         secureTextEntry={type === 'password' ? true : false}
       />

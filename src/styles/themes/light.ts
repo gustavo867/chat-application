@@ -14,8 +14,11 @@ const light = {
     title: '#030303',
     text: '#424242',
     inputColor: '#12121D',
+    blackOpacity: 'rgba(18, 18, 29, 0.05)',
     inputPlaceholder: 'rgba(18, 18, 29, 0.3)',
     button: '#28252A',
+    chatInputColor: '#fbfbfb',
+    chatBackground: '#edf0f5',
   },
 };
 

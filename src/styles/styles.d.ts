@@ -17,8 +17,11 @@ declare module 'styled-components' {
       title: string;
       text: string;
       button: string;
+      blackOpacity: string;
       inputColor: string;
       inputPlaceholder: string;
+      chatBackground: string;
+      chatInputColor: string;
     };
   }
 }

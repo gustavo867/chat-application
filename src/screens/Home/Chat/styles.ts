@@ -13,12 +13,12 @@ type BubbleProps = {
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #edf0f5;
+  background-color: ${(props) => props.theme.colors.chatBackground};
 `;
 
 export const KeyBoardView = styled.KeyboardAvoidingView`
   flex: 1;
-  background-color: #edf0f5;
+  background-color: ${(props) => props.theme.colors.chatBackground};
 `;
 
 export const ChatList = styled.FlatList`
@@ -55,7 +55,7 @@ export const BubbleText = styled.Text<BubbleProps>`
 
 export const ChatInputContainer = styled.View`
   width: ${width * 0.95}px;
-  background-color: #fbfbfb;
+  background-color: ${(props) => props.theme.colors.chatInputColor};
   elevation: 2;
   border-radius: ${moderateScale(12)}px;
   flex-direction: row;
