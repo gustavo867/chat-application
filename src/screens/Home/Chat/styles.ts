@@ -29,7 +29,7 @@ export const ChatList = styled.FlatList`
 `;
 
 export const BubbleContainer = styled.View<BubbleProps>`
-  max-width: ${width * 0.8}px;
+  max-width: ${width * 0.8 - moderateScale(20)}px;
   min-height: ${moderateScale(40)}px;
   min-width: ${width * 0.2}px;
   padding: ${moderateScale(15)}px;
@@ -40,7 +40,6 @@ export const BubbleContainer = styled.View<BubbleProps>`
   border-radius: ${moderateScale(12)}px;
   align-items: center;
   justify-content: center;
-  margin-top: ${moderateScale(10)}px;
   align-self: ${(props) => (props.isSendByMe ? 'flex-end' : 'flex-start')};
   margin-right: ${(props) => (props.isSendByMe ? moderateScale(10) : 0)}px;
   margin-left: ${(props) => (props.isSendByMe ? 0 : moderateScale(10))}px;
@@ -90,4 +89,21 @@ export const SubmitMessage = styled.TouchableOpacity`
   background-color: ${(props) => props.theme.colors.userChat};
   align-items: center;
   justify-content: center;
+`;
+
+export const BubblePhoto = styled.Image`
+  width: ${moderateScale(50)}px;
+  height: ${moderateScale(50)}px;
+  border-radius: ${moderateScale(25)}px;
+`;
+
+export const BubbleMainContainer = styled.View<BubbleProps>`
+  flex-direction: row;
+  margin-top: ${moderateScale(10)}px;
+  align-items: center;
+  justify-content: center;
+  max-width: ${width * 0.9}px;
+  align-self: ${(props) => (props.isSendByMe ? 'flex-end' : 'flex-start')};
+  margin-right: ${(props) => (props.isSendByMe ? moderateScale(10) : 0)}px;
+  margin-left: ${(props) => (props.isSendByMe ? 0 : moderateScale(10))}px;
 `;

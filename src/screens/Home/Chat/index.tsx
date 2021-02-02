@@ -9,6 +9,7 @@ import * as S from './styles';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'store/index';
 import { ThemeContext } from 'styled-components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Bubble from './Bubble';
 import Toast from 'react-native-toast-message';
@@ -25,6 +26,7 @@ interface Message extends FirebaseFirestoreTypes.DocumentData {
   text: string;
   createdAt: number;
   uid: string;
+  photo: string;
 }
 
 const Chat: React.FC = () => {
@@ -45,21 +47,34 @@ const Chat: React.FC = () => {
       .doc(thread.id)
       .collection('MESSAGES')
       .orderBy('createdAt', 'desc')
-      .onSnapshot((querySnapshot) => {
-        const messages = querySnapshot.docs.map((doc) => {
+      .onSnapshot(async (querySnapshot) => {
+        const messages = querySnapshot.docs.map(async (doc) => {
           const firebaseData = doc.data();
+
+          const info = await firestore()
+            .collection('INFO')
+            .doc(firebaseData.uid)
+            .get();
 
           const data = {
             id: doc.id,
             text: '',
             createdAt: new Date().getTime(),
+            photo: info.data()
+              ? info.data()!.profilePhoto!
+              : 'https://i.stack.imgur.com/l60Hf.png',
             ...firebaseData,
           };
 
+          await AsyncStorage.setItem(
+            `@message-id=${thread.id}`,
+            JSON.stringify(data),
+          );
           return data;
         });
 
-        setMessages(messages as Message[]);
+        const data = await Promise.all(messages).then((res) => res);
+        setMessages(data as Message[]);
       });
 
     // Stop listening for updates whenever the component unmounts
@@ -102,6 +117,7 @@ const Chat: React.FC = () => {
   const renderItem = useCallback(
     ({ item }: { item: Message }) => (
       <Bubble
+        photo={item.photo}
         isSendByMe={userUid === item.uid ? true : false}
         text={item.text}
       />

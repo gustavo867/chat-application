@@ -80,3 +80,19 @@ export const Separator = styled.View`
   width: ${width}px;
   margin-top: ${moderateScale(10)}px;
 `;
+
+export const CreateChatRoom = styled.TouchableOpacity`
+  width: ${moderateScale(50)}px;
+  height: ${moderateScale(50)}px;
+  border-radius: ${moderateScale(25)}px;
+  margin-top: ${moderateScale(10)}px;
+  background-color: ${(props) => props.theme.colors.primary};
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CreateText = styled.Text`
+  font-size: ${moderateScale(16)}px;
+  font-family: 'Poppins-Bold';
+  color: ${(props) => props.theme.colors.background};
+`;

@@ -65,6 +65,11 @@ const Messages: React.FC = () => {
 
   return (
     <S.Container>
+      <S.CreateChatRoom
+        onPress={() => navigate('CreateChatRoom', { params: 'Messages' })}
+      >
+        <S.CreateText>+</S.CreateText>
+      </S.CreateChatRoom>
       <S.RoomList
         contentContainerStyle={{
           paddingBottom: 20,
