@@ -19,6 +19,7 @@ const light = {
     button: '#28252A',
     chatInputColor: '#fbfbfb',
     chatBackground: '#edf0f5',
+    titleSplash: '#0316DD',
   },
 };
 

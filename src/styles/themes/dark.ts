@@ -3,19 +3,23 @@ const dark = {
 
   colors: {
     primary: '#161616',
-    secundary: '#28252A',
+    secundary: '#0316DD',
 
-    background: '#161616',
+    background: '#1B1B1B',
     userChat: '#1C55F3',
-    otherChat: '#F5FBFE',
+    otherChat: '#D0D3E3',
     red: '#FF3653',
-    grey: '#9F9F9F',
-    username: '#F5FBFE',
-    title: '#FFFFFF',
-    text: '#fff',
-    inputColor: '#F5FBFE',
-    inputPlaceholder: '#B9B9B9',
-    button: '#0316DD',
+    grey: '#5B5B5B',
+    username: '#3C3E3F',
+    title: '#FDFDFD',
+    text: '#424242',
+    inputColor: '#12121D',
+    blackOpacity: 'rgba(18, 18, 29, 0.05)',
+    inputPlaceholder: 'rgba(18, 18, 29, 0.3)',
+    button: '#27252A',
+    chatInputColor: '#fbfbfb',
+    chatBackground: '#edf0f5',
+    titleSplash: '#0316DD',
   },
 };
 

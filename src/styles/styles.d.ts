@@ -22,6 +22,7 @@ declare module 'styled-components' {
       inputPlaceholder: string;
       chatBackground: string;
       chatInputColor: string;
+      titleSplash: string;
     };
   }
 }
