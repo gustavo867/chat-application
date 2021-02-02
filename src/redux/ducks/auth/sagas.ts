@@ -18,6 +18,7 @@ type Payload = {
     username: string;
     password: string;
     imageUri: string;
+    name: string;
   };
 };
 
@@ -79,36 +80,37 @@ export async function* authRegisterUserName(
   username: string,
   password: string,
   imageUri: string,
+  name: string,
 ) {
   try {
+    console.log(imageUri);
     const user = await auth().signInWithEmailAndPassword(email, password);
 
     await user.user.updateProfile({
-      displayName: username,
+      displayName: name,
     });
 
     const db = firestore().collection('info').doc(user.user.uid);
 
-    if (imageUri) {
-      try {
-        const filename = imageUri.substring(imageUri.lastIndexOf('/') + 1);
-        const uploadUri = imageUri.replace('file://', '');
+    const photo: any = await getPhoto(imageUri);
+    const reference = storage().ref('avatar').child(user.user.uid);
+    await reference.put(photo);
 
-        const reference = storage().ref(filename);
-        const task = await reference.putFile(uploadUri);
+    const url = await reference.getDownloadURL();
 
-        task.task.then((res) => {
-          console.log(res);
-        });
-      } catch (e) {
-        Toast.show({
-          text1: 'Error while updaloading photo',
-          type: 'error',
-        });
-      }
+    try {
+      const res = await db.set({
+        username: username,
+        profilePhoto: url,
+      });
+    } catch (e) {
+      Toast.show({
+        text1: 'Error while updating photo',
+        type: 'error',
+      });
     }
 
-    // yield put(authRegisterSuccess(user));
+    yield put(authRegisterSuccess(user));
   } catch (e) {
     Toast.show({
       text1: 'Error while signing user',
@@ -132,13 +134,15 @@ export function* authRegisterLoad({ payload }: Payload) {
       type: 'success',
     });
 
-    authRegisterUserName(
+    yield call(
+      authRegisterUserName,
       payload.email,
       payload.username,
       payload.password,
       payload.imageUri,
+      payload.name,
     );
-    // yield put(authRegisterSuccess(userCredentials));
+    yield put(authRegisterSuccess(userCredentials));
   } catch (e) {
     Toast.show({
       text1: 'Error while registering user',

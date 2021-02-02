@@ -6,12 +6,14 @@ export const authRegisterRequest = (
   username: string,
   password: string,
   imageUri: string,
+  name: string,
 ) =>
   action(AuthTypes.AUTH_REGISTER_REQUEST, {
     email,
     username,
     password,
     imageUri,
+    name,
   });
 
 export const authRegisterSuccess = (data: AuthUserType) =>

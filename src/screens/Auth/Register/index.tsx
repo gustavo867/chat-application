@@ -13,7 +13,6 @@ import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { DEFAULT_OPTIONS } from 'src/config/cameraOptions';
 import { ThemeContext } from 'styled-components';
-import firestore from '@react-native-firebase/firestore';
 
 const Register: React.FC = () => {
   const [active, setActive] = useState(false);
@@ -96,6 +95,7 @@ const Register: React.FC = () => {
         userData.username,
         userData.password,
         userData.imageUri,
+        userData.name,
       ),
     );
   }, [userData.email, userData.password, userData.username, userData.imageUri]);

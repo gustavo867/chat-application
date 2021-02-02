@@ -67,6 +67,7 @@ export const LargeMargin = styled.View`
 export const KeyBoardView = styled.KeyboardAvoidingView`
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 `;
 
 export const InputContainer = styled.View`
