@@ -8,6 +8,7 @@ const INITIAL_STATE: AuthState = {
     msg: '',
     hasError: false,
   },
+  info: null,
   loading: false,
 };
 
@@ -26,7 +27,8 @@ const reducer: Reducer = (state = INITIAL_STATE, action) => {
           msg: '',
           hasError: false,
         },
-        user: action.payload,
+        user: action.payload.data,
+        info: action.payload.info,
         isAuthenticated: true,
       };
     case AuthTypes.AUTH_REGISTER_FAILURE:
@@ -48,7 +50,8 @@ const reducer: Reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        user: action.payload,
+        user: action.payload.data,
+        info: action.payload.info,
         isAuthenticated: true,
       };
     case AuthTypes.AUTH_SIGNIN_FAILURE:

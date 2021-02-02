@@ -12,10 +12,15 @@ export enum AuthTypes {
 }
 
 export type AuthUserType = FirebaseAuthTypes.UserCredential;
+export type InfoUserType = {
+  profilePhoto: string | null;
+  username: string;
+};
 
 export interface AuthState {
   readonly user: FirebaseAuthTypes.UserCredential | null | undefined;
   readonly isAuthenticated: boolean;
+  readonly info: InfoUserType | null;
   readonly error: {
     msg: string;
     hasError: boolean;

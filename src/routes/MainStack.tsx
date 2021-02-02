@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import Messages from 'home/Messages/index';
 import { ThemeContext } from 'styled-components';
 import { moderateScale } from 'react-native-size-matters';
@@ -14,13 +14,15 @@ import CreateChatRoom from 'home/Messages/CreateChatRoom';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Chat from 'home/Chat';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authLogoutRequest } from 'store/ducks/auth/actions';
+import { ApplicationState } from 'store/index';
+import Profile from 'src/screens/Settings/Profile';
 
 const Main = createStackNavigator();
 
 const MainStack: React.FC = () => {
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
 
@@ -95,12 +97,10 @@ const MainStack: React.FC = () => {
               style={{
                 marginRight: moderateScale(10),
               }}
-              name="message-plus"
+              name="dots-vertical"
               size={28}
               color="#ffffff"
-              onPress={() =>
-                navigation.navigate('CreateChatRoom', { params: 'Message' })
-              }
+              onPress={() => navigate('Profile')}
             />
           ),
         })}
@@ -187,6 +187,13 @@ const MainStack: React.FC = () => {
         })}
         name="Chat"
         component={Chat}
+      />
+      <Main.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          headerShown: false,
+        }}
       />
     </Main.Navigator>
   );

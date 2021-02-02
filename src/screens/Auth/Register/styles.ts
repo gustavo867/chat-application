@@ -1,13 +1,13 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import styled from 'styled-components/native';
 
-const { width, height } = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 
 export const Container = styled.SafeAreaView`
   flex: 1;
   align-items: center;
-  padding-top: 40px;
+  padding-top: ${StatusBar.currentHeight ? StatusBar.currentHeight : 20}px;
   background-color: ${(props) => props.theme.colors.background};
 `;
 

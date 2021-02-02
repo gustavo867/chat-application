@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects';
 import Toast from 'react-native-toast-message';
-import auth from '@react-native-firebase/auth';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {
@@ -29,6 +29,24 @@ type SignInPayload = {
   };
 };
 
+export async function getData(user: FirebaseAuthTypes.UserCredential) {
+  try {
+    const info = await firestore().collection('INFO').doc(user.user.uid).get();
+
+    const newData = {
+      user: user,
+      info: info.data(),
+    };
+
+    return newData;
+  } catch (e) {
+    Toast.show({
+      text1: 'Error while login user',
+      type: 'error',
+    });
+  }
+}
+
 export function* authSignIn({ payload }: SignInPayload) {
   try {
     const userAuth = auth();
@@ -45,7 +63,9 @@ export function* authSignIn({ payload }: SignInPayload) {
       type: 'success',
     });
 
-    yield put(authSignInSuccess(userCredentials));
+    const { user, info } = yield call(getData, userCredentials);
+
+    yield put(authSignInSuccess(user, info));
   } catch (e) {
     Toast.show({
       text1: 'Error while signing user',
@@ -75,43 +95,48 @@ export function* logOut() {
   }
 }
 
-export async function* authRegisterUserName(
-  email: string,
-  username: string,
-  password: string,
-  imageUri: string,
-  name: string,
-) {
+export async function authRegisterUserName(data: {
+  email: string;
+  username: string;
+  password: string;
+  imageUri: string;
+  name: string;
+}) {
+  const { email, username, password, imageUri, name } = data;
   try {
-    console.log(imageUri);
-    const user = await auth().signInWithEmailAndPassword(email, password);
+    const userAuth = auth();
+    const user = await userAuth.signInWithEmailAndPassword(email, password);
 
     await user.user.updateProfile({
       displayName: name,
     });
 
-    const db = firestore().collection('info').doc(user.user.uid);
+    const db = firestore().collection('INFO').doc(user.user.uid);
 
     const photo: any = await getPhoto(imageUri);
-    const reference = storage().ref('avatar').child(user.user.uid);
+    console.log(photo);
+    const reference = storage().ref('AVATARS').child(user.user.uid);
     await reference.put(photo);
 
     const url = await reference.getDownloadURL();
 
-    try {
-      const res = await db.set({
-        username: username,
-        profilePhoto: url,
-      });
-    } catch (e) {
-      Toast.show({
-        text1: 'Error while updating photo',
-        type: 'error',
-      });
-    }
+    console.log(url);
 
-    yield put(authRegisterSuccess(user));
+    const res = await db.set({
+      username: username,
+      profilePhoto: url,
+    });
+
+    const info = await firestore().collection('INFO').doc(user.user.uid).get();
+
+    const newData = {
+      user: user,
+      info: info.data(),
+    };
+
+    return newData;
   } catch (e) {
+    console.log(e.message);
     Toast.show({
       text1: 'Error while signing user',
       type: 'error',
@@ -134,15 +159,9 @@ export function* authRegisterLoad({ payload }: Payload) {
       type: 'success',
     });
 
-    yield call(
-      authRegisterUserName,
-      payload.email,
-      payload.username,
-      payload.password,
-      payload.imageUri,
-      payload.name,
-    );
-    yield put(authRegisterSuccess(userCredentials));
+    const { info, user } = yield call(authRegisterUserName, payload);
+
+    yield put(authRegisterSuccess(user, info));
   } catch (e) {
     Toast.show({
       text1: 'Error while registering user',

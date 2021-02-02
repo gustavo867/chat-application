@@ -4,7 +4,7 @@ import { Dimensions, TouchableOpacityProps } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import styled from 'styled-components/native';
 
-const { width, height } = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 
 interface ButtonProps extends TouchableOpacityProps {
   label: string;
@@ -85,7 +85,11 @@ const BtnContainer = styled.TouchableOpacity<BtnProps>`
   width: ${width * 0.8}px;
   height: ${moderateScale(56)}px;
   background-color: ${(props) =>
-    props.type === 'light' ? '#FFFFFF' : props.theme.colors.inputPlaceholder};
+    props.type === 'light'
+      ? props.theme.title === 'dark'
+        ? '#1B1B1B'
+        : '#FFFFFF'
+      : props.theme.colors.inputPlaceholder};
   align-items: center;
   justify-content: center;
   align-self: center;
@@ -97,7 +101,11 @@ const BtnTitle = styled.Text<BtnProps>`
   font-family: 'Poppins-Bold';
   font-size: ${moderateScale(16)}px;
   color: ${(props) =>
-    props.type === 'light' ? props.theme.colors.inputColor : '#FFFFFF'};
+    props.theme.title === 'dark'
+      ? '#FEFEFF'
+      : props.type === 'light'
+      ? props.theme.colors.inputColor
+      : '#FFFFFF'};
 `;
 
 export default Splash;

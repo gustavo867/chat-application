@@ -15,7 +15,13 @@ export const Container = styled.TouchableOpacity.attrs({
   justify-content: center;
   flex-direction: row;
   background-color: ${(props) =>
-    props.active ? props.theme.colors.primary : props.theme.colors.background};
+    props.theme.title === 'dark'
+      ? props.active
+        ? props.theme.colors.secundary
+        : props.theme.colors.button
+      : props.active
+      ? props.theme.colors.primary
+      : props.theme.colors.background};
   elevation: 10;
   margin-top: ${moderateScale(20)}px;
 `;
@@ -23,7 +29,11 @@ export const Container = styled.TouchableOpacity.attrs({
 export const Text = styled.Text<Props>`
   font-size: ${moderateScale(16)}px;
   color: ${(props) =>
-    props.active
+    props.theme.title === 'dark'
+      ? props.active
+        ? props.theme.colors.title
+        : props.theme.colors.grey
+      : props.active
       ? props.theme.colors.background
       : props.theme.colors.inputPlaceholder};
   margin-horizontal: 10px;
