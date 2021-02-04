@@ -134,9 +134,9 @@ const Chat: React.FC = () => {
             placeholderTextColor={colors.inputPlaceholder}
           />
           <S.RowBtns>
-            <S.SubmitMessage>
+            {/* <S.SubmitMessage>
               <AntIcon name="addfile" color="#FFF" size={15} />
-            </S.SubmitMessage>
+            </S.SubmitMessage> */}
             <S.SubmitMessage onPress={() => handleSend()}>
               <Icon name="md-send" color="#FFF" size={15} />
             </S.SubmitMessage>

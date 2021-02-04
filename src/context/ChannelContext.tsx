@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Message extends FirebaseFirestoreTypes.DocumentData {
   id: string;
@@ -22,7 +23,7 @@ interface Context {
   messages: Message[] | undefined;
   rooms: Threads[] | undefined;
   loading: boolean;
-  getCurrentRoom: (id: string) => () => void;
+  getCurrentRoom: (id: string) => Promise<() => void>;
 }
 
 export const ListenerContext = createContext<Context>({} as Context);
@@ -31,8 +32,16 @@ const ListenerProvider: React.FC = ({ children }) => {
   const [messages, setMessages] = useState<Message[] | undefined>(undefined);
   const [rooms, setRooms] = useState<Threads[]>([]);
   const [loading, setLoading] = useState(false);
-  const getCurrentRoom = useCallback((id: string) => {
+  const getCurrentRoom = useCallback(async (id: string) => {
     setLoading(true);
+    const chat = await AsyncStorage.getItem(`@messages-${id}`);
+    if (chat) {
+      const chatData = JSON.parse(chat);
+      setMessages(chatData);
+
+      setLoading(false);
+    }
+
     const messagesListener = firestore()
       .collection('CHAT')
       .doc(id)
@@ -56,10 +65,12 @@ const ListenerProvider: React.FC = ({ children }) => {
               : 'https://i.stack.imgur.com/l60Hf.png',
             ...firebaseData,
           };
+
           return data;
         });
 
         const data = await Promise.all(messages).then((res) => res);
+        AsyncStorage.setItem(`@messages-${id}`, JSON.stringify(data));
         setMessages(data as Message[]);
         setLoading(false);
       });

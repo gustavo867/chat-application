@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import {
   moderateScale,
   moderateVerticalScale,
@@ -28,7 +28,7 @@ export const ChatList = styled.FlatList`
   overflow: hidden;
 `;
 
-export const BubbleContainer = styled.View<BubbleProps>`
+export const BubbleContainer = styled(Animated.View)<BubbleProps>`
   max-width: ${width * 0.8 - moderateScale(20)}px;
   min-height: ${moderateScale(40)}px;
   min-width: ${width * 0.2}px;
@@ -70,7 +70,7 @@ export const ChatInputContainer = styled.View`
 `;
 
 export const ChatInput = styled.TextInput`
-  width: ${width * 0.68}px;
+  width: ${width * 0.7}px;
   padding-left: ${moderateScale(15)}px;
   align-self: center;
   height: auto;
@@ -102,7 +102,7 @@ export const BubblePhoto = styled.Image`
   border-radius: ${moderateScale(25)}px;
 `;
 
-export const BubbleMainContainer = styled.View<BubbleProps>`
+export const BubbleMainContainer = styled(Animated.View)<BubbleProps>`
   flex-direction: row;
   margin-top: ${moderateScale(10)}px;
   align-items: center;
