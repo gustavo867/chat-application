@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import firestore from '@react-native-firebase/firestore';
+import React, { useCallback, useContext } from 'react';
 
 import * as S from './styles';
 import Loading from 'components/Loading';
 import { useNavigation } from '@react-navigation/native';
+import { ListenerContext } from 'src/context/ChannelContext';
 
 export type Threads = {
   id: string;
@@ -16,41 +16,22 @@ export type Threads = {
 };
 
 const Messages: React.FC = () => {
-  const [threads, setThreads] = useState<Threads[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { rooms, loading, getCurrentRoom } = useContext(ListenerContext);
 
   const { navigate } = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('CHAT')
-      .orderBy('latestMessage.createdAt', 'desc')
-      .onSnapshot((querySnapshot) => {
-        const threads: any = querySnapshot.docs.map((documentSnapshot) => {
-          return {
-            id: documentSnapshot.id,
-            // give defaults
-            name: '',
+  const onGetCurrentRoom = useCallback(
+    (item: Threads) => {
+      getCurrentRoom(item.id);
 
-            latestMessage: {
-              text: '',
-            },
-            ...documentSnapshot.data(),
-          };
-        });
-        setThreads(threads);
-
-        setLoading(false);
-      });
-
-    return unsubscribe;
-  }, []);
+      navigate('Chat', { params: 'Messages', thread: item });
+    },
+    [navigate, rooms],
+  );
 
   const Item = (item: Threads) => {
     return (
-      <S.RoomBtn
-        onPress={() => navigate('Chat', { params: 'Messages', thread: item })}
-      >
+      <S.RoomBtn onPress={() => onGetCurrentRoom(item)}>
         <S.RoomName>{item.name}</S.RoomName>
       </S.RoomBtn>
     );
@@ -65,16 +46,11 @@ const Messages: React.FC = () => {
 
   return (
     <S.Container>
-      <S.CreateChatRoom
-        onPress={() => navigate('CreateChatRoom', { params: 'Messages' })}
-      >
-        <S.CreateText>+</S.CreateText>
-      </S.CreateChatRoom>
       <S.RoomList
         contentContainerStyle={{
           paddingBottom: 20,
         }}
-        data={threads}
+        data={rooms}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         ItemSeparatorComponent={() => <S.Separator />}

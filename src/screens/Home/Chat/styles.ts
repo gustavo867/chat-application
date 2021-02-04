@@ -70,7 +70,7 @@ export const ChatInputContainer = styled.View`
 `;
 
 export const ChatInput = styled.TextInput`
-  width: ${width * 0.7}px;
+  width: ${width * 0.68}px;
   padding-left: ${moderateScale(15)}px;
   align-self: center;
   height: auto;
@@ -82,6 +82,10 @@ export const ChatInput = styled.TextInput`
   color: ${(props) => props.theme.colors.inputColor};
 `;
 
+export const RowBtns = styled.View`
+  flex-direction: row;
+`;
+
 export const SubmitMessage = styled.TouchableOpacity`
   width: ${moderateScale(40)}px;
   height: ${moderateScale(40)}px;
@@ -89,6 +93,7 @@ export const SubmitMessage = styled.TouchableOpacity`
   background-color: ${(props) => props.theme.colors.userChat};
   align-items: center;
   justify-content: center;
+  margin-right: 5px;
 `;
 
 export const BubblePhoto = styled.Image`

@@ -14,6 +14,7 @@ import Routes from './routes/routes';
 import light from 'themes/light';
 import firebaseConfig from './config/firebaseConfig';
 import Loading from 'components/Loading';
+import ListenerProvider from './context/ChannelContext';
 
 const App: React.FC = () => {
   if (firebase.apps.length > 0) {
@@ -26,17 +27,19 @@ const App: React.FC = () => {
       <ThemeProvider theme={light}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
-            <StatusBar
-              translucent
-              backgroundColor="transparent"
-              barStyle="default"
-            />
-            <Loading />
-            <Toast
-              ref={(ref) => Toast.setRef(ref)}
-              topOffset={50}
-              visibilityTime={1000}
-            />
+            <ListenerProvider>
+              <StatusBar
+                translucent
+                backgroundColor="transparent"
+                barStyle="default"
+              />
+              <Loading />
+              <Toast
+                ref={(ref) => Toast.setRef(ref)}
+                topOffset={50}
+                visibilityTime={1000}
+              />
+            </ListenerProvider>
           </PersistGate>
         </Provider>
       </ThemeProvider>
@@ -47,17 +50,19 @@ const App: React.FC = () => {
     <ThemeProvider theme={light}>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <StatusBar
-            translucent
-            backgroundColor="transparent"
-            barStyle="default"
-          />
-          <Routes />
-          <Toast
-            ref={(ref) => Toast.setRef(ref)}
-            topOffset={50}
-            visibilityTime={500}
-          />
+          <ListenerProvider>
+            <StatusBar
+              translucent
+              backgroundColor="transparent"
+              barStyle="default"
+            />
+            <Routes />
+            <Toast
+              ref={(ref) => Toast.setRef(ref)}
+              topOffset={50}
+              visibilityTime={500}
+            />
+          </ListenerProvider>
         </PersistGate>
       </Provider>
     </ThemeProvider>

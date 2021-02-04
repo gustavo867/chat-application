@@ -93,14 +93,14 @@ const MainStack: React.FC = () => {
             />
           ),
           headerRight: () => (
-            <Icon
+            <Ionicons
               style={{
                 marginRight: moderateScale(10),
               }}
-              name="dots-vertical"
+              name="add"
               size={28}
               color="#ffffff"
-              onPress={() => navigate('Profile')}
+              onPress={() => navigate('CreateChatRoom', { params: 'Messages' })}
             />
           ),
         })}

@@ -1,12 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'store/index';
 import * as S from './styles';
 
 const Profile: React.FC = () => {
   const { info, user } = useSelector((state: ApplicationState) => state.auth);
-
-  console.log(user?.user.displayName);
 
   return (
     <S.Container>

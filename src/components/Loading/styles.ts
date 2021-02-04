@@ -12,4 +12,5 @@ export const LoadText = styled.Text`
   font-size: ${moderateScale(20)}px;
   color: ${(props) => props.theme.colors.inputColor};
   font-weight: bold;
+  margin-left: ${moderateScale(20)}px;
 `;
