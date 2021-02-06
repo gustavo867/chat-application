@@ -51,6 +51,7 @@ const Chat: React.FC = () => {
 
       if (messageRef.current) {
         messageRef.current.clear();
+        setInputHeight(0);
 
         firestore()
           .collection('CHAT')
