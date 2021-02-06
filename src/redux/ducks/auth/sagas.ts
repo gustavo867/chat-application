@@ -114,7 +114,7 @@ export async function authRegisterUserName(data: {
     const db = firestore().collection('INFO').doc(user.user.uid);
 
     const photo: any = await getPhoto(imageUri);
-    console.log(photo);
+    console.log('photo', photo);
     const reference = storage().ref('AVATARS').child(user.user.uid);
     await reference.put(photo);
 
@@ -125,6 +125,7 @@ export async function authRegisterUserName(data: {
     const res = await db.set({
       username: username,
       profilePhoto: url,
+      uid: user.user.uid,
     });
 
     const info = await firestore().collection('INFO').doc(user.user.uid).get();

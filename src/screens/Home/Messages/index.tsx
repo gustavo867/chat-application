@@ -4,6 +4,8 @@ import * as S from './styles';
 import Loading from 'components/Loading';
 import { useNavigation } from '@react-navigation/native';
 import { ListenerContext } from 'src/context/ChannelContext';
+import { useSelector } from 'react-redux';
+import { ApplicationState } from 'store/index';
 
 export type Threads = {
   id: string;
@@ -13,11 +15,15 @@ export type Threads = {
     text: string;
     uid: string;
   };
+  uid: string;
+  private: boolean;
 };
 
 const Messages: React.FC = () => {
   const { rooms, loading, getCurrentRoom } = useContext(ListenerContext);
-
+  const { user, additionalUserInfo } = useSelector(
+    (state: ApplicationState) => state.auth.user!,
+  );
   const { navigate } = useNavigation();
 
   const onGetCurrentRoom = useCallback(
@@ -44,13 +50,30 @@ const Messages: React.FC = () => {
     return <Loading />;
   }
 
+  console.log(rooms);
+
   return (
     <S.Container>
       <S.RoomList
         contentContainerStyle={{
           paddingBottom: 20,
         }}
-        data={rooms}
+        data={rooms?.filter((item) => {
+          if (item.private === false) {
+            return item;
+          } else {
+            if (item.private === true) {
+              if (item.name === additionalUserInfo?.username) {
+                return item;
+              }
+              if (item.uid === user!.uid) {
+                return item;
+              }
+
+              return;
+            }
+          }
+        })}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         ItemSeparatorComponent={() => <S.Separator />}

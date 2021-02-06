@@ -6,6 +6,7 @@ import AuthStack from './AuthStack';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'store/index';
 import MainStack from './MainStack';
+import Loading from 'components/Loading';
 
 const Route = createStackNavigator();
 
@@ -22,6 +23,7 @@ const Routes: React.FC = () => {
         ) : (
           <Route.Screen name="Auth" component={AuthStack} />
         )}
+        <Route.Screen name="Loading" component={Loading} />
       </Route.Navigator>
     </NavigationContainer>
   );

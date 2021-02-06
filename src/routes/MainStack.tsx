@@ -4,7 +4,7 @@ import {
   HeaderStyleInterpolators,
   TransitionSpecs,
 } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Text, View } from 'react-native';
 import Messages from 'home/Messages/index';
@@ -14,10 +14,10 @@ import CreateChatRoom from 'home/Messages/CreateChatRoom';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Chat from 'home/Chat';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { authLogoutRequest } from 'store/ducks/auth/actions';
-import { ApplicationState } from 'store/index';
 import Profile from 'src/screens/Settings/Profile';
+import Users from 'src/screens/Users';
 
 const Main = createStackNavigator();
 
@@ -29,6 +29,7 @@ const MainStack: React.FC = () => {
   const onPressLogOut = useCallback(() => {
     dispatch(authLogoutRequest());
   }, []);
+
   return (
     <Main.Navigator
       screenOptions={{
@@ -93,15 +94,32 @@ const MainStack: React.FC = () => {
             />
           ),
           headerRight: () => (
-            <Ionicons
+            <View
               style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
                 marginRight: moderateScale(10),
               }}
-              name="add"
-              size={28}
-              color="#ffffff"
-              onPress={() => navigate('CreateChatRoom', { params: 'Messages' })}
-            />
+            >
+              <Ionicons
+                style={{
+                  marginRight: moderateScale(15),
+                }}
+                name="add"
+                size={28}
+                color="#ffffff"
+                onPress={() =>
+                  navigate('CreateChatRoom', { params: 'Messages' })
+                }
+              />
+              <Feather
+                name="user-plus"
+                size={28}
+                color="#FFFFFF"
+                onPress={() => navigate('Users')}
+              />
+            </View>
           ),
         })}
         name="Messages"
@@ -187,6 +205,13 @@ const MainStack: React.FC = () => {
         })}
         name="Chat"
         component={Chat}
+      />
+      <Main.Screen
+        name="Users"
+        component={Users}
+        options={{
+          headerShown: false,
+        }}
       />
       <Main.Screen
         name="Profile"

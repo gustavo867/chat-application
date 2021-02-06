@@ -8,7 +8,6 @@ import React, {
   useState,
 } from 'react';
 import firestore from '@react-native-firebase/firestore';
-import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Message extends FirebaseFirestoreTypes.DocumentData {
@@ -23,7 +22,15 @@ interface Context {
   messages: Message[] | undefined;
   rooms: Threads[] | undefined;
   loading: boolean;
+  users: User[];
   getCurrentRoom: (id: string) => Promise<() => void>;
+  getUsers: () => () => () => void;
+}
+
+interface User {
+  username: string;
+  profilePhoto: string;
+  uid: string;
 }
 
 export const ListenerContext = createContext<Context>({} as Context);
@@ -32,6 +39,8 @@ const ListenerProvider: React.FC = ({ children }) => {
   const [messages, setMessages] = useState<Message[] | undefined>(undefined);
   const [rooms, setRooms] = useState<Threads[]>([]);
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+
   const getCurrentRoom = useCallback(async (id: string) => {
     setLoading(true);
     const chat = await AsyncStorage.getItem(`@messages-${id}`);
@@ -79,12 +88,28 @@ const ListenerProvider: React.FC = ({ children }) => {
     return () => messagesListener();
   }, []);
 
+  const getUsers = useCallback(() => {
+    const users = firestore()
+      .collection('INFO')
+      .onSnapshot((snap) => {
+        const info = snap.docs.map((doc) => {
+          return doc.data();
+        });
+
+        setUsers(info as any);
+      });
+
+    return () => users;
+  }, []);
+
   useEffect(() => {
+    getUsers();
     const unsubscribe = firestore()
       .collection('CHAT')
       .orderBy('latestMessage.createdAt', 'desc')
       .onSnapshot((querySnapshot) => {
         const threads: any = querySnapshot.docs.map((documentSnapshot) => {
+          console.log(documentSnapshot.data());
           return {
             id: documentSnapshot.id,
             // give defaults
@@ -94,6 +119,12 @@ const ListenerProvider: React.FC = ({ children }) => {
               text: '',
             },
             ...documentSnapshot.data(),
+            uid: documentSnapshot.data().uid
+              ? documentSnapshot.data().uid
+              : documentSnapshot.data().latestMessage.uid,
+            private: documentSnapshot.data().private
+              ? documentSnapshot.data().private
+              : false,
           };
         });
         setRooms(threads);
@@ -110,8 +141,10 @@ const ListenerProvider: React.FC = ({ children }) => {
       rooms,
       loading,
       getCurrentRoom,
+      users,
+      getUsers,
     }),
-    [messages, loading, rooms, getCurrentRoom],
+    [messages, loading, rooms, getCurrentRoom, users, getUsers],
   );
 
   return (
