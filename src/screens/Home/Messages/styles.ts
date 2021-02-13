@@ -58,14 +58,24 @@ export const RoomBtn = styled.TouchableOpacity.attrs({
 })`
   align-items: flex-start;
   justify-content: center;
-  width: ${width * 0.8}px;
+  width: ${width * 0.9}px;
   align-self: center;
   border-radius: ${moderateScale(10)}px;
   height: ${moderateScale(80)}px;
   background-color: #f5fbfe;
   margin-top: ${moderateScale(10)}px;
+  flex-direction: column;
   elevation: 5;
   padding-horizontal: ${moderateScale(20)}px;
+`;
+
+export const LastMessage = styled.Text.attrs({
+  numberOfLines: 2,
+})`
+  font-size: ${moderateScale(12)}px;
+  max-width: ${width * 0.8}px;
+  font-family: 'Poppins-Regular';
+  color: ${(props) => props.theme.colors.inputColor};
 `;
 
 export const RoomName = styled.Text`

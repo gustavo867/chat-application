@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationState } from 'store/index';
 import Toast from 'react-native-toast-message';
 import { ListenerContext } from 'src/context/ChannelContext';
+import { useNavigation } from '@react-navigation/native';
 
 type User = {
   username: string;
@@ -28,6 +29,7 @@ const ITEM_SIZE = moderateScale(100);
 
 const Item: React.FC<ItemProps> = ({ index, item, scrollY }) => {
   const { rooms } = useContext(ListenerContext);
+  const { navigate } = useNavigation();
   const uid = useSelector(
     (state: ApplicationState) => state.auth.user?.user.uid,
   );
@@ -66,6 +68,7 @@ const Item: React.FC<ItemProps> = ({ index, item, scrollY }) => {
           uid: uid,
         })
         .then((doc) => {
+          navigate('Messages');
           Toast.show({
             text1: 'Success in create chat room',
             text2: 'Redirecting',
@@ -80,6 +83,7 @@ const Item: React.FC<ItemProps> = ({ index, item, scrollY }) => {
           });
         });
     } else {
+      navigate('Messages');
       Toast.show({
         text1: 'Room already created',
         type: 'error',

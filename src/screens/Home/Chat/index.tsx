@@ -1,5 +1,12 @@
 import { useRoute } from '@react-navigation/native';
-import React, { useCallback, useContext, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Threads } from '../Messages/index';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -16,6 +23,7 @@ import Toast from 'react-native-toast-message';
 import { ListenerContext } from 'src/context/ChannelContext';
 import { TextInput } from 'react-native';
 import Loading from 'components/Loading';
+import Item from 'src/screens/Users/Item';
 
 type RouteProps = {
   params: {
@@ -32,11 +40,18 @@ interface Message extends FirebaseFirestoreTypes.DocumentData {
   photo: string;
 }
 
+interface JustMessage {
+  text: string;
+  createdAt: number;
+  uid: string;
+  photo: string;
+}
+
 const Chat: React.FC = () => {
   const userUid = useSelector(
     (state: ApplicationState) => state.auth.user?.user.uid,
   );
-  const { messages, loading } = useContext(ListenerContext);
+  const { messages, loading, handleSend } = useContext(ListenerContext);
   const { colors } = useContext(ThemeContext);
   const [inputHeight, setInputHeight] = useState(0);
   const [newMessage, setNewMessage] = useState('');
@@ -45,46 +60,11 @@ const Chat: React.FC = () => {
 
   const thread = route.params.thread;
 
-  const handleSend = useCallback(async () => {
-    if (newMessage.length > 0) {
-      const text = newMessage;
-
-      if (messageRef.current) {
-        messageRef.current.clear();
-        setInputHeight(0);
-
-        firestore()
-          .collection('CHAT')
-          .doc(thread.id)
-          .collection('MESSAGES')
-          .add({
-            text,
-            createdAt: new Date().getTime(),
-            uid: userUid,
-          });
-
-        await firestore()
-          .collection('CHAT')
-          .doc(thread.id)
-          .set(
-            {
-              latestMessage: {
-                text,
-                createdAt: new Date().getTime(),
-              },
-            },
-            { merge: true },
-          );
-
-        setNewMessage('');
-        setInputHeight(0);
-      }
-    } else {
-      Toast.show({
-        text1: 'Please digit at least 1 caracter',
-        type: 'info',
-      });
-    }
+  const handleNewSend = useCallback(() => {
+    handleSend(messageRef, thread.id, setNewMessage, setInputHeight, {
+      uid: userUid,
+      text: newMessage,
+    } as any);
   }, [newMessage]);
 
   const renderItem = useCallback(
@@ -97,7 +77,10 @@ const Chat: React.FC = () => {
     ),
     [],
   );
-  const keyExtractor = useCallback((item: Message) => item.id, []);
+  const keyExtractor = useCallback(
+    (item: Message) => `user-${item.uid}-${item.createdAt}`,
+    [],
+  );
 
   if (loading) {
     return <Loading />;
@@ -138,7 +121,7 @@ const Chat: React.FC = () => {
             {/* <S.SubmitMessage>
               <AntIcon name="addfile" color="#FFF" size={15} />
             </S.SubmitMessage> */}
-            <S.SubmitMessage onPress={() => handleSend()}>
+            <S.SubmitMessage onPress={() => handleNewSend()}>
               <Icon name="md-send" color="#FFF" size={15} />
             </S.SubmitMessage>
           </S.RowBtns>

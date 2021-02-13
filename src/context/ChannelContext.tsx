@@ -9,6 +9,8 @@ import React, {
 } from 'react';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TextInput } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 interface Message extends FirebaseFirestoreTypes.DocumentData {
   id: string;
@@ -25,12 +27,24 @@ interface Context {
   users: User[];
   getCurrentRoom: (id: string) => Promise<() => void>;
   getUsers: () => () => () => void;
+  handleSend: (
+    ref: React.RefObject<TextInput>,
+    id: string,
+    setState: (value: React.SetStateAction<string>) => void,
+    setInputHeight: (value: React.SetStateAction<number>) => void,
+    { uid, text }: HandleSendObject,
+  ) => Promise<void>;
 }
 
 interface User {
   username: string;
   profilePhoto: string;
   uid: string;
+}
+
+interface HandleSendObject {
+  uid: string;
+  text: string;
 }
 
 export const ListenerContext = createContext<Context>({} as Context);
@@ -40,6 +54,51 @@ const ListenerProvider: React.FC = ({ children }) => {
   const [rooms, setRooms] = useState<Threads[]>([]);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
+
+  const handleSend = useCallback(
+    (
+      ref: React.RefObject<TextInput>,
+      id: string,
+      setState: (value: React.SetStateAction<string>) => void,
+      setInputHeight: (value: React.SetStateAction<number>) => void,
+      { uid, text }: HandleSendObject,
+    ) => {
+      if (text.length > 0) {
+        if (ref.current) {
+          ref.current.clear();
+          setInputHeight(0);
+
+          firestore().collection('CHAT').doc(id).collection('MESSAGES').add({
+            text,
+            createdAt: new Date().getTime(),
+            uid: uid,
+          });
+
+          firestore()
+            .collection('CHAT')
+            .doc(id)
+            .set(
+              {
+                latestMessage: {
+                  text,
+                  createdAt: new Date().getTime(),
+                },
+              },
+              { merge: true },
+            );
+
+          setState('');
+          setInputHeight(0);
+        }
+      } else {
+        Toast.show({
+          text1: 'Please digit at least 1 caracter',
+          type: 'info',
+        });
+      }
+    },
+    [],
+  );
 
   const getCurrentRoom = useCallback(async (id: string) => {
     setLoading(true);
@@ -109,7 +168,6 @@ const ListenerProvider: React.FC = ({ children }) => {
       .orderBy('latestMessage.createdAt', 'desc')
       .onSnapshot((querySnapshot) => {
         const threads: any = querySnapshot.docs.map((documentSnapshot) => {
-          console.log(documentSnapshot.data());
           return {
             id: documentSnapshot.id,
             // give defaults
@@ -143,8 +201,9 @@ const ListenerProvider: React.FC = ({ children }) => {
       getCurrentRoom,
       users,
       getUsers,
+      handleSend,
     }),
-    [messages, loading, rooms, getCurrentRoom, users, getUsers],
+    [messages, loading, rooms, getCurrentRoom, users, getUsers, handleSend],
   );
 
   return (

@@ -39,6 +39,7 @@ const Messages: React.FC = () => {
     return (
       <S.RoomBtn onPress={() => onGetCurrentRoom(item)}>
         <S.RoomName>{item.name}</S.RoomName>
+        <S.LastMessage>Latest Message: {item.latestMessage.text}</S.LastMessage>
       </S.RoomBtn>
     );
   };
@@ -49,8 +50,6 @@ const Messages: React.FC = () => {
   if (loading) {
     return <Loading />;
   }
-
-  console.log(rooms);
 
   return (
     <S.Container>

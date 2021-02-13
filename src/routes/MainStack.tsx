@@ -13,11 +13,13 @@ import { moderateScale } from 'react-native-size-matters';
 import CreateChatRoom from 'home/Messages/CreateChatRoom';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Chat from 'home/Chat';
+import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { authLogoutRequest } from 'store/ducks/auth/actions';
 import Profile from 'src/screens/Settings/Profile';
 import Users from 'src/screens/Users';
+import Toast from 'react-native-toast-message';
 
 const Main = createStackNavigator();
 
@@ -25,6 +27,27 @@ const MainStack: React.FC = () => {
   const { goBack, navigate } = useNavigation();
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
+
+  const onDeleteThread = useCallback((id: string) => {
+    firestore()
+      .collection('CHAT')
+      .doc(id)
+      .delete()
+      .then((res) => {
+        navigate('Messages');
+        Toast.show({
+          text1: 'Room deleted with success',
+          text2: 'Redirecting ...',
+          type: 'success',
+        });
+      })
+      .catch((e) => {
+        Toast.show({
+          text1: e.message,
+          type: 'error',
+        });
+      });
+  }, []);
 
   const onPressLogOut = useCallback(() => {
     dispatch(authLogoutRequest());
@@ -193,6 +216,20 @@ const MainStack: React.FC = () => {
               >
                 {route.params.params}
               </Text>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => onDeleteThread(route.params.thread.id)}
+            >
+              <Feather
+                style={{
+                  marginRight: moderateScale(10),
+                }}
+                name="trash"
+                size={24}
+                color="white"
+              />
             </TouchableOpacity>
           ),
           title: route.params.thread.name,
