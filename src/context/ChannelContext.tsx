@@ -193,16 +193,17 @@ const ListenerProvider: React.FC = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const values = useMemo(
-    () => ({
-      messages,
-      rooms,
-      loading,
-      getCurrentRoom,
-      users,
-      getUsers,
-      handleSend,
-    }),
+  const values: Context = useMemo(
+    () =>
+      ({
+        messages,
+        rooms,
+        loading,
+        getCurrentRoom,
+        users,
+        getUsers,
+        handleSend,
+      } as any),
     [messages, loading, rooms, getCurrentRoom, users, getUsers, handleSend],
   );
 
