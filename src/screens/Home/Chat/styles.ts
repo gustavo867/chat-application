@@ -16,6 +16,10 @@ export const Container = styled.View`
   background-color: ${(props) => props.theme.colors.chatBackground};
 `;
 
+export const ActionBtn = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.96,
+})``;
+
 export const KeyBoardView = styled.KeyboardAvoidingView`
   flex: 1;
   background-color: ${(props) => props.theme.colors.chatBackground};

@@ -1,32 +1,52 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Dimensions, Easing } from 'react-native';
+import { SharedElement } from 'react-navigation-shared-element';
+import { useNavigation } from '@react-navigation/native';
 import * as S from './styles';
 
 interface Bubble {
   isSendByMe: boolean;
   text: string;
   photo: string;
+  index: number;
+  uid: string;
 }
 
-const { width } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
-const Bubble: React.FC<Bubble> = ({ isSendByMe, text, photo }) => {
+const Bubble: React.FC<Bubble> = ({ uid, isSendByMe, text, photo, index }) => {
+  const { navigate } = useNavigation();
+  const translateY = useRef(new Animated.Value(-height)).current;
   const translateX = useRef(new Animated.Value(width)).current;
   const translateXLeft = useRef(new Animated.Value(-width)).current;
 
   useEffect(() => {
-    Animated.timing(translateX, {
-      toValue: 0,
-      duration: 500,
-      easing: Easing.bezier(0.11, 0, 0.5, 0),
-      useNativeDriver: true,
-    }).start();
-    Animated.timing(translateXLeft, {
-      toValue: 0,
-      duration: 500,
-      easing: Easing.bezier(0.11, 0, 0.5, 0),
-      useNativeDriver: true,
-    }).start();
+    translateX.setValue(width);
+    translateXLeft.setValue(-width);
+    translateY.setValue(-height);
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500,
+        delay: index * 200,
+        easing: Easing.bezier(0.83, 0, 0.17, 1),
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateX, {
+        toValue: 0,
+        duration: 500,
+        delay: index * 200,
+        easing: Easing.bezier(0.11, 0, 0.5, 0),
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateXLeft, {
+        toValue: 0,
+        duration: 500,
+        delay: index * 200,
+        easing: Easing.bezier(0.11, 0, 0.5, 0),
+        useNativeDriver: true,
+      }),
+    ]).start();
   }, []);
 
   const leftOpacity = translateXLeft.interpolate({
@@ -35,9 +55,9 @@ const Bubble: React.FC<Bubble> = ({ isSendByMe, text, photo }) => {
     extrapolate: 'clamp',
   });
 
-  const opacity = translateX.interpolate({
-    inputRange: [0, width],
-    outputRange: [1, 0],
+  const opacity = translateY.interpolate({
+    inputRange: [-height, 0],
+    outputRange: [0, 1],
     extrapolate: 'clamp',
   });
 
@@ -48,8 +68,9 @@ const Bubble: React.FC<Bubble> = ({ isSendByMe, text, photo }) => {
           style={{
             transform: [
               {
-                translateX,
+                translateY,
               },
+              { translateX },
             ],
             opacity,
           }}
@@ -58,11 +79,23 @@ const Bubble: React.FC<Bubble> = ({ isSendByMe, text, photo }) => {
           <S.BubbleContainer isSendByMe={isSendByMe}>
             <S.BubbleText isSendByMe={isSendByMe}>{text}</S.BubbleText>
           </S.BubbleContainer>
-          <S.BubblePhoto
-            source={{
-              uri: photo,
-            }}
-          />
+          <S.ActionBtn
+            onPress={() =>
+              navigate('FullPhoto', {
+                uri: photo,
+                uid,
+                index,
+              })
+            }
+          >
+            <SharedElement id={`item.${uid}.image_url.${index}`}>
+              <S.BubblePhoto
+                source={{
+                  uri: photo,
+                }}
+              />
+            </SharedElement>
+          </S.ActionBtn>
         </S.BubbleMainContainer>
       );
     case false:
@@ -70,6 +103,9 @@ const Bubble: React.FC<Bubble> = ({ isSendByMe, text, photo }) => {
         <S.BubbleMainContainer
           style={{
             transform: [
+              {
+                translateY,
+              },
               {
                 translateX: translateXLeft,
               },
@@ -94,7 +130,10 @@ const Bubble: React.FC<Bubble> = ({ isSendByMe, text, photo }) => {
           style={{
             transform: [
               {
-                translateX,
+                translateY,
+              },
+              {
+                translateX: translateXLeft,
               },
             ],
             opacity,

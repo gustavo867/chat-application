@@ -185,6 +185,7 @@ const ListenerProvider: React.FC = ({ children }) => {
               : false,
           };
         });
+
         setRooms(threads);
 
         setLoading(false);

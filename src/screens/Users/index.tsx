@@ -17,20 +17,26 @@ const Users: React.FC = () => {
   return (
     <S.Container>
       <S.UsersList
-        data={users.filter((item) => {
-          return item.uid !== uid;
-        })}
         showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true },
         )}
         scrollEventThrottle={16}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item, index }: any) => (
-          <Item item={item} index={index} scrollY={scrollY} />
-        )}
-      />
+      >
+        {users
+          .filter((item) => {
+            return item.uid !== uid;
+          })
+          .map((item, index) => (
+            <Item
+              key={index.toString()}
+              item={item}
+              index={index}
+              scrollY={scrollY}
+            />
+          ))}
+      </S.UsersList>
     </S.Container>
   );
 };

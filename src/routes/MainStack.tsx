@@ -4,6 +4,7 @@ import {
   HeaderStyleInterpolators,
   TransitionSpecs,
 } from '@react-navigation/stack';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Text, View } from 'react-native';
@@ -20,8 +21,9 @@ import { authLogoutRequest } from 'store/ducks/auth/actions';
 import Profile from 'src/screens/Settings/Profile';
 import Users from 'src/screens/Users';
 import Toast from 'react-native-toast-message';
+import UserPhoto from 'src/screens/Users/UserPhoto';
 
-const Main = createStackNavigator();
+const Main = createSharedElementStackNavigator();
 
 const MainStack: React.FC = () => {
   const { goBack, navigate } = useNavigation();
@@ -52,6 +54,17 @@ const MainStack: React.FC = () => {
   const onPressLogOut = useCallback(() => {
     dispatch(authLogoutRequest());
   }, []);
+
+  const options = {
+    headerBackTitleVisible: false,
+    cardStyleInterpolator: ({ current: { progress } }: any) => {
+      return {
+        cardStyle: {
+          opacity: progress,
+        },
+      };
+    },
+  };
 
   return (
     <Main.Navigator
@@ -255,6 +268,24 @@ const MainStack: React.FC = () => {
         component={Profile}
         options={{
           headerShown: false,
+        }}
+      />
+      <Main.Screen
+        name="FullPhoto"
+        component={UserPhoto}
+        options={{
+          headerShown: false,
+        }}
+        sharedElementsConfig={(route, otherRoute, showing) => {
+          const { uri, uid, index } = route.params;
+
+          return [
+            {
+              id: `item.${uid}.image_url.${index}`,
+              animation: 'fade-out',
+              resize: 'clip',
+            },
+          ];
         }}
       />
     </Main.Navigator>

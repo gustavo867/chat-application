@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { all, takeLatest } from 'redux-saga/effects';
 import { AuthTypes } from './auth/types';
 import { authRegisterLoad, authSignIn, logOut } from './auth/sagas';

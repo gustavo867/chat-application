@@ -68,15 +68,18 @@ const Chat: React.FC = () => {
   }, [newMessage]);
 
   const renderItem = useCallback(
-    ({ item }: { item: Message }) => (
+    ({ item, index }: { item: Message; index: number }) => (
       <Bubble
         photo={item.photo}
         isSendByMe={userUid === item.uid ? true : false}
         text={item.text}
+        index={index}
+        uid={item.uid}
       />
     ),
     [],
   );
+
   const keyExtractor = useCallback(
     (item: Message) => `user-${item.uid}-${item.createdAt}`,
     [],

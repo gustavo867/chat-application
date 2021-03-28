@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { call, put } from 'redux-saga/effects';
 import Toast from 'react-native-toast-message';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';

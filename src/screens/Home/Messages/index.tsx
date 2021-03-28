@@ -24,6 +24,7 @@ const Messages: React.FC = () => {
   const { user, additionalUserInfo } = useSelector(
     (state: ApplicationState) => state.auth.user!,
   );
+
   const { navigate } = useNavigation();
 
   const onGetCurrentRoom = useCallback(

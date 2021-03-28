@@ -2,7 +2,7 @@ import { Animated, Dimensions } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import styled from 'styled-components/native';
 
-const { width } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 export const Container = styled.View`
   flex: 1;
@@ -12,9 +12,11 @@ export const Container = styled.View`
   background-color: ${(props) => props.theme.colors.background};
 `;
 
-export const UsersList = styled(Animated.FlatList)`
+export const UsersList = styled(Animated.ScrollView)`
   flex-grow: 1;
 `;
+
+export const AnimatedContainer = styled(Animated.View)``;
 
 export const ProfilePhoto = styled.Image`
   width: ${moderateScale(100)}px;
@@ -47,4 +49,9 @@ export const ColumnAdd = styled.View`
 
 export const ActionBtn = styled.TouchableOpacity`
   margin-top: ${moderateScale(8)}px;
+`;
+
+export const FullPhoto = styled(Animated.Image)`
+  height: ${height * 0.8}px;
+  width: ${width * 0.9}px;
 `;
